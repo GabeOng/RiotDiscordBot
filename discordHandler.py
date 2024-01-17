@@ -3,8 +3,8 @@ import Helper
 import DiscordRiotBot as Bot
 def switch(msg):
     if msg[1:6]=='match':
-        check = msg[7:].split(" ")
-        
+        check = msg[8:]
+        Helper.getMatchInfo(   3   )
         
     elif msg[1:8]=='history':
         check = msg[9:].split(" ")

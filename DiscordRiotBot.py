@@ -2,7 +2,7 @@ import requests
 import json
 import Helper
 region='na1'
-apiKey='RGAPI-60a5cec5-24c2-4301-a1b0-f4de38ac2f63'
+
 
 #get puuid from region, username and tag
 puuid = Helper.getPuuidFromUser('na1', 'Chocomelk', "Choco")
