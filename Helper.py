@@ -18,7 +18,7 @@ def getMatches(puuid):
         a=a+1
     return matchList
 
-def printMatchList(matchList):
+def printMatchList(matchList,participantList):
     for i in range(20):
         getMatchInfo(matchList[i])
         
