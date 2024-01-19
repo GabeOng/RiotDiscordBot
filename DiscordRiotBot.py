@@ -10,13 +10,13 @@ puuid = Helper.getPuuidFromUser('na1', 'Chocomelk', "Choco")
 matchList=Helper.getMatches(puuid)
 #select which match to look at
 matchId=matchList[5]
-for i in range(20):
-    Helper.getMatchInfo(matchList[i])
+#for i in range(20):
+Helper.getMatchInfo(matchList[6])
 #get Match Info
-matchInfo=Helper.getMatchInfo(matchId)
+#matchInfo=Helper.getMatchInfo(matchId)
+
+Helper.printMatchList(matchList, puuid)
 
 
-save_file = open('matchData.json', 'w')
-json.dump(matchInfo, save_file, indent=6)
-save_file.close()
+
 
