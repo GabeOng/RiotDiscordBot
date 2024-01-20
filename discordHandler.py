@@ -48,7 +48,17 @@ def switch(msg) -> str:
         return ret
 
     #msg format: +profile na1 Chocomelk #Choco
-    #elif msg[1:8]=='profile':
+    elif msg[0:7]=='profile':
+        print("made it")
+        check=msg[8:].split(" ")
+        try:
+            ret = Helper.getProfileData(check[0], check[1], check[2][1:])
+            print(ret)
+        except Exception as e:
+            print(e)
+            return "Error "+str(e)
+        print("end")
+        return ret
         
 async def send_message(message, user_message, is_private):
     

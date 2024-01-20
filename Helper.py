@@ -1,6 +1,7 @@
 import requests
 import json
 from api import apiKey
+from tabulate import tabulate
 
 def show_table(table):
     new_string = '```'
@@ -15,6 +16,28 @@ def show_table(table):
     new_string=new_string+"```"
     return new_string
 
+def getProfileData(region, user, tag) -> str:
+    puuid = getPuuidFromUser(region, user, tag)
+    accountId = requests.get("https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-puuid/"+puuid+"?api_key="+apiKey+"")
+    accountId=accountId.json()
+    aid=accountId['id']
+    print(aid)
+    info = requests.get("https://na1.api.riotgames.com/lol/league/v4/entries/by-summoner/"+aid+"?api_key="+apiKey+"")
+    info=info.json()
+    name=user+" #"+tag
+    rank =info[1]["tier"]+" " +info[1]["rank"]+ "  "+str(info[1]['leaguePoints'])+" LP"
+    
+    wr=str(float(int(info[1]['wins'])/(int(info[1]['wins']+int(info[1]['losses'])))*100))+"% wr"
+    
+    string=[[name], [rank], [str(wr)]]
+    print("meow")
+    ret=tabulate(string, tablefmt="fancy_grid")
+    endcap='```'
+    ret=endcap+ret+endcap
+    
+    return ret
+    
+    
 def getPuuidFromUser(region, user, tag):
     getPuuid=requests.get("https://americas.api.riotgames.com/riot/account/v1/accounts/by-riot-id/"+user+"/"+tag+"?api_key="+apiKey+"")
     accountInfo = getPuuid.json()
@@ -61,14 +84,22 @@ def getMatchInfo(matchId):
     #save_file.close()
     participantList=lMatch['info']['participants']
     
-    
+    element=[[""]*2 for _ in range(int(len(participantList)/2))]
     ret=''
-    
-    for i in range(len(participantList)/2):
-        ret=ret+str(participantList[i]['summonerName']+"\t "+participantList[i+len(participantList)/2]['summonerName']+"\n    "+
-              participantList[i]['championName']+"\t"+participantList[i+len(participantList)/2]['championName']+"\n    "+
+    for i in range(int(len(participantList)/2)):
+        element[i][0]=str(participantList[i]['summonerName']+"\n"+
+                          participantList[i]['championName']+"\n"+
+                          getKDA(participantList[i]))
+        element[i][1]=str(participantList[i+int(len(participantList)/2)]['summonerName']+"\n"+
+                          participantList[i+int(len(participantList)/2)]['championName']+"\n"+
+                          getKDA(participantList[i+int(len(participantList)/2)])+"\n")
+            
+        ret=ret+str(participantList[i]['summonerName']+"\t "+participantList[i+int(len(participantList)/2)]['summonerName']+"\n    "+
+              participantList[i]['championName']+"\t"+participantList[i+int(len(participantList)/2)]['championName']+"\n    "+
               getKDA(participantList[i])+
-              "\t"+getKDA(participantList[i+len(participantList)/2])+"\n")
-
+              "\t"+getKDA(participantList[i+int(len(participantList)/2)])+"\n")
+    ret=tabulate(element, tablefmt="fancy_grid")
+    endcap='```'
+    ret=endcap+ret+endcap
     return ret
     
